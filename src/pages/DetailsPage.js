@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useFetchDetails from "../hooks/useFetchDetails";
 import useFetch from "../hooks/useFetch";
@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import Divider from "../components/Divider";
 import HorizontalScrollBar from "../components/HorizontalScrollBar";
+import VideoPlay from "../components/VideoPlay";
 
 const DetailsPage = () => {
   const params = useParams();
@@ -21,9 +22,16 @@ const DetailsPage = () => {
   const { data: recommendationsData } = useFetch(
     `/${params?.explore}/${params?.id}/recommendations`
   );
+  const [playVideo, setPlayVideo] = useState(false);
+  const [playVideoId, setPlayVideoId] = useState("");
 
   console.log("data", data);
   console.log("star cast", castData);
+
+  const handlePlayVideo = (data) => {
+    setPlayVideoId(data);
+    setPlayVideo(true);
+  };
 
   // Safely calculate the duration
   const duration = data?.runtime
@@ -63,14 +71,16 @@ const DetailsPage = () => {
       </div>
       <div className="container mx-auto px-3 py-16 lg:py-0 flex flex-col lg:flex-row gap-4 lg:gap-10">
         <div className="relative mx-auto lg:-mt-28 lg:mx-0 w-fit min-w-60">
-          {data.poster_path ? (
-            <img
-              src={imageURL + data.poster_path}
-              className="h-80 w-60 object-cover rounded"
-            />
-          ) : (
-            <div className="h-80 w-60 bg-neutral-800 rounded"></div>
-          )}
+          <img
+            src={imageURL + data.poster_path}
+            className="h-80 w-60 object-cover rounded"
+          />
+          <button
+            onClick={() => handlePlayVideo(data)}
+            className="mt-3 w-full py-2 px-4 text-center bg-white text-black rounded font-bold text-lg hover:bg-gradient-to-l from-blue-500 to-green-300 hover:scale-105 transition-all"
+          >
+            Play Now
+          </button>
         </div>
         <div>
           <h2 className="text-2xl lg:text-4xl font-bold text-white mt-2">
@@ -151,6 +161,13 @@ const DetailsPage = () => {
           media_type={params?.explore}
         />
       </div>
+      {playVideo && (
+        <VideoPlay
+          data={playVideoId}
+          close={() => setPlayVideo(false)}
+          media_type={params?.explore}
+        />
+      )}
     </div>
   );
 };

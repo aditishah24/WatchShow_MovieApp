@@ -48,11 +48,11 @@ const Header = () => {
             <input
               type="text"
               placeholder="Search here..."
-              className="bg-transparent px-4 py-1 outline-none border-none hidden lg:block"
+              className="bg-transparent px-4 py-1 outline-none border-none lg:block hidden"
               onChange={(e) => setSearchInput(e.target.value)}
               value={searchInput}
             />
-            <button className="text-2xl text-white">
+            <button className="text-2xl text-white hidden lg:block ">
               <CiSearch />
             </button>
           </form>
